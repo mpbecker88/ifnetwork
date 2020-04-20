@@ -9,7 +9,7 @@ fanofile = open("fano.dat", "w")
 
 for gei in geilist:
 	for gie in gielist:
-		print gei, gie
+		print(gei, gie)
 		tlist, nlist = np.loadtxt("raster_filtered_gei" + str(gei) + "_gie" + str(gie) + ".dat", unpack=True)
 
 		CVISIlist = []
@@ -18,8 +18,8 @@ for gei in geilist:
 		dtlist = []
 
 
-		for i in xrange(1000):
-			print i,
+		for i in range(1000):
+			print(i),
 			dtlist = []
 			spikecount = 0
 			tnlist = []
@@ -30,10 +30,10 @@ for gei in geilist:
 					t0 = t
 					spikecount += 1			
 
-			print spikecount
+			print(spikecount)
 			
 			if len(tnlist) > 5:
-				for j in xrange(1,len(tnlist)):
+				for j in range(1,len(tnlist)):
 					dtlist.append(tnlist[j] - tnlist[j-1])
 
 			ratelist.append(spikecount/tlist[-1])

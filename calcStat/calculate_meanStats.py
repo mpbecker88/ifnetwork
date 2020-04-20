@@ -1,4 +1,3 @@
-from pylab import frange
 import numpy as np
 
 

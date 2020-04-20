@@ -1,17 +1,16 @@
-from pylab import frange
 import numpy as np
 import matplotlib.pyplot as plt
 
 fanofile = open("fano.dat", "w")
 ratefile = open("rate.dat", "w")
 
-for g_ei in frange(1, 4, 0.25):
-	for g_ie in frange(1, 4, 0.25):
+for g_ei in range(1, 4, 0.25):
+	for g_ie in range(1, 4, 0.25):
 		fname = "raster" + '%.2f' % g_ei + "_" '%.2f' % g_ie + "filtered.dat" 	
 
 		tlist, nlist = np.loadtxt(fname, unpack=True)
 
-		print g_ei, g_ie
+		print(g_ei, g_ie)
 		nspikes = np.zeros(4096)
 		nrates = np.zeros(4096)
 		
@@ -27,7 +26,7 @@ for g_ei in frange(1, 4, 0.25):
 		plt.savefig("ratehist_" + str(g_ei) + "_" + str(g_ie) + ".png")
 		plt.close()
 
-		#for i in xrange(4096):
+		#for i in range(4096):
 		#	cvilist[i] = np.var(dtlist)/np.mean(dtlist)
 
 		fano = np.var(nrates)/np.mean(nrates)
