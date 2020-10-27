@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <cmath>
-#include "ifNetwork.h"
+#include "../source/ifNetwork.h"
 
 int main(int argc, char const *argv[])
 {
@@ -105,7 +105,7 @@ int main(int argc, char const *argv[])
 				sum_rate += v_rate[i];
 				sum_rate2 += v_rate[i]*v_rate[i];
 				ind_file << v_rate[i] << " ";
-				
+
 
 				sum_fano += v_fano[i];
 				sum_fano2 += v_fano[i]*v_fano[i];
@@ -128,7 +128,7 @@ int main(int argc, char const *argv[])
 			s_rate_matrix[(int)std::round(mean_delay*10)][(int)std::round(sigma_delay*10)] = sigma_rate;
 			s_fano_matrix[(int)std::round(mean_delay*10)][(int)std::round(sigma_delay*10)] = sigma_fano;
 
-			std::cout << std::endl << (int)std::round(mean_delay*10) << " " << (int)std::round(sigma_delay*10) << " " << sync_matrix[(int)std::round(mean_delay*10)][(int)std::round(sigma_delay*10)] << std::endl << std::endl; 
+			std::cout << std::endl << (int)std::round(mean_delay*10) << " " << (int)std::round(sigma_delay*10) << " " << sync_matrix[(int)std::round(mean_delay*10)][(int)std::round(sigma_delay*10)] << std::endl << std::endl;
 
 			v_sync.clear();
 			v_rate.clear();
@@ -182,7 +182,7 @@ int main(int argc, char const *argv[])
 			else
 				s_fano_file << "NaN ";
 		}
-		
+
 		sync_file << std::endl;
 		rate_file << std::endl;
 		fano_file << std::endl;

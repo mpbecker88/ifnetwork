@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <cmath>
-#include "ifNetwork.h"
+#include "../source/ifNetwork.h"
 
 int main(int argc, char const *argv[])
 {
@@ -92,7 +92,7 @@ int main(int argc, char const *argv[])
 
 		g_file << g << " " << mean_sync << " " << sigma_sync << " " << mean_rate << " " << sigma_rate << " " << mean_fano << " " << sigma_fano << std::endl;
 
-		
+
 		v_sync.clear();
 		v_rate.clear();
 		v_fano.clear();

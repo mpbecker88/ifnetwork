@@ -15,7 +15,7 @@ rho_delta = 0
 
 for aIStr in alphaIString:
     for aStr in alphaString:
-        aCorrM = np.loadtxt("autocorr" + str(aIStr) + "-" + str(aStr) + ".dat")
+        aCorrM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/rate_autocorr.dat")
 
         nlin = aCorrM.shape[0]
         ncol = aCorrM.shape[1]
@@ -41,7 +41,7 @@ cvi_delta = 0
 
 for aIStr in alphaIString:
     for aStr in alphaString:
-        CVIM = np.loadtxt("CVI" + str(aIStr) + "-" + str(aStr) + ".dat")
+        CVIM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/CVI.dat")
 
         nlin = CVIM.shape[0]
         ncol = CVIM.shape[1]
@@ -67,7 +67,7 @@ fano_delta = 0
 
 for aIStr in alphaIString:
     for aStr in alphaString:
-        fanoM = np.loadtxt("fano" + str(aIStr) + "-" + str(aStr) + ".dat")
+        fanoM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/fano.dat")
 
         nlin = fanoM.shape[0]
         ncol = fanoM.shape[1]
@@ -93,7 +93,7 @@ rate_delta = 0
 
 for aIStr in alphaIString:
     for aStr in alphaString:
-        rateM = np.loadtxt("rate" + str(aIStr) + "-" + str(aStr) + ".dat")
+        rateM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/rate.dat")
 
         nlin = rateM.shape[0]
         ncol = rateM.shape[1]
@@ -120,22 +120,23 @@ for aIStr in alphaIString:
     for aStr in alphaString:
         phiFile = open("phi" + str(aIStr) + "-" + str(aStr) + ".dat", "w")
 
-        aCorrM = np.loadtxt("autocorr" + str(aIStr) + "-" + str(aStr) + ".dat")
-        cviM = np.loadtxt("CVI" + str(aIStr) + "-" + str(aStr) + ".dat")
-        fanoM = np.loadtxt("fano" + str(aIStr) + "-" + str(aStr) + ".dat")
-        rateM = np.loadtxt("rate" + str(aIStr) + "-" + str(aStr) + ".dat")
+        aCorrM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/rate_autocorr.dat")
+        cviM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/CVI.dat")
+        fanoM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/fano.dat")
+        cgHetM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/cg_heterogeneity.dat")
+        rateM = np.loadtxt("InAlpha" + str(aIStr) + "/alpha" + str(aStr) + "/rate.dat")
 
         nlin = aCorrM.shape[0]
         ncol = aCorrM.shape[1]
-        
+
         phiM = np.zeros((nlin, ncol))
 
         for l in range(nlin):
             for c in range(ncol):
-                if cviM[l][c] > 1: #C
-                    phiFile.write("5 ")
-                elif rateM[l][c] < 1: #Q
+                if rateM[l][c] < 0.0001: #Q
                     phiFile.write("0 ")
+                elif cgHetM[l][c] > 0.8: #C
+                    phiFile.write("5 ")
                 elif (aCorrM[l][c] < rho_c) and (cviM[l][c] > cvi_c): #AI
                     phiFile.write("1 ")
                 elif (aCorrM[l][c] < rho_c) and (cviM[l][c] < cvi_c): #AR
@@ -147,6 +148,3 @@ for aIStr in alphaIString:
             phiFile.write("\n")
 
         phiFile.close()
-
-        
-

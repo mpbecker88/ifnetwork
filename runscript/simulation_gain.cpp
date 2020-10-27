@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string>
 
-#include "ifNetwork.h"
+#include "../source/ifNetwork.h"
 
 int main(int argc, char const *argv[])
 {
@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
 		std::cout << "No seed argument given." << std::endl;
 		return 1;
 	}
-	
+
 	std::ofstream sync_file, firerate_file, fano_file;
 	sync_file.open("sync.dat");
 	firerate_file.open("firerate.dat");
@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
 	const bool local_pruning = false;
 	const int N = 5120;
 	const bool symmetric = true;
-	const double input_rate = 0.005;
+	const double input_rate = 0.03;
 	const double start_measure_time = 10000.;
 
 	double w0_ee = 0.1;
@@ -34,13 +34,14 @@ int main(int argc, char const *argv[])
 		double g_ie = 1;
 		while(g_ie < 4.1)
 		{
+			std::cout << g_ei << " " << g_ie << std::endl;
 			//std::ofstream potential_file;
 			std::ofstream raster_file;
 			std::ofstream connectivity_file;
 			//std::ofstream weights_file;
 			//std::ofstream weightMatrix_file;
 			std::ofstream currents_file;
-	
+
 			//potential_file.open("potential" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
 			raster_file.open("raster" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
 			//weightMatrix_file.open("weight_matrix" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
@@ -48,7 +49,7 @@ int main(int argc, char const *argv[])
 
 			IFNetwork netspike(N, symmetric, pruning, local_pruning, w0_ee, g_ei, g_ie, input_rate, start_measure_time, "sim", atoi(argv[1]));
 			//netspike.print_weightMatrix(weightMatrix_file);
-			
+
 			for(int i = 0; i <	500000; i++)
 			{
 				int pre_spikes, pos_spikes;
@@ -56,18 +57,18 @@ int main(int argc, char const *argv[])
 
 				if(!(i%10000))
 					std::cout << i*0.1 << std::endl;
-				
+
 				netspike.update();
-				
+
 				netspike.print_spikes(raster_file);
 				//netspike.print_potentials(potential_file);
 				netspike.print_currents(currents_file);
 			}
-		
+
 			sync_file << netspike.calculate_syncronization() << " ";
 			firerate_file << netspike.calculate_mean_fire_rate() << " ";
 			fano_file << netspike.calculate_fano_factor() << " ";
-			
+
 			//potential_file.close();
 			raster_file.close();
 			connectivity_file.close();

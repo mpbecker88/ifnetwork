@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "ifNeuron.h"
+#include "../source/ifNeuron.h"
 
 double dt = 0.1;
 

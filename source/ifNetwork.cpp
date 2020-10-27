@@ -105,7 +105,7 @@ void IFNetwork::init_ex_neurons(bool symmetric)
 	{
 		for(int i = 0; i < m_Ne; i++)
 		{
-			double alpha = 1.0; //gsl_ran_flat(r, 0.2, 1.0);
+			double alpha = gsl_ran_flat(r, 0.2, 1.0);
 			IFNeuron t_neuron = IFNeuron(true, 0, alpha, m_dt);
 			Node t_node;
 
@@ -132,7 +132,7 @@ void IFNetwork::init_ex_neurons(bool symmetric)
 	{
 		for(int i = 0; i < m_Ne; i++)
 		{
-			double alpha = 1.0; //gsl_ran_flat(r, 0.2, 1.0);
+			double alpha = gsl_ran_flat(r, 0.2, 1.0);
 			IFNeuron t_neuron = IFNeuron(true, 0, alpha, m_dt);
 			Node t_node;
 
@@ -165,7 +165,7 @@ void IFNetwork::init_in_neurons(bool symmetric)
 	{
 		for(int i = m_Ne; i < m_N; i++)
 		{
-			double alpha = 1.0;
+			double alpha = 0.5;
 			IFNeuron t_neuron = IFNeuron(false, 0, alpha, m_dt);
 			Node t_node;
 
@@ -193,7 +193,7 @@ void IFNetwork::init_in_neurons(bool symmetric)
 	{
 		for(int i = m_Ne; i < m_N; i++)
 		{
-			double alpha = 1.0;
+			double alpha = 0.5;
 			IFNeuron t_neuron = IFNeuron(false, 0, alpha, m_dt);
 			Node t_node;
 
@@ -1222,7 +1222,7 @@ void IFNetwork::print_parameters()
 {
 	std::cout << "####### N = " << m_N  << "    Ne = " << m_Ne << "    Ninp = " << m_Ninp << std::endl;
 	std::cout << "####### CProb (EE, EI, IE, II) = (" << m_conn_prob_ee << ", " << m_conn_prob_ei << ", " << m_conn_prob_ie << ", " << m_conn_prob_ii << ")" << "    CSProb = " << m_conn_prob_stim << std::endl;
-	std::cout << "####### w0_ee = " << m_w0_ee << "    w0_ie = " << m_w0_ie << "    w0_s = " << m_w0_stim << std::endl;
+	std::cout << "####### w0_ee = " << m_w0_ee << "    w0_ie = " << m_w0_ie << "    w0_ei = " << m_w0_ei << "    w0_ii = " << m_w0_ii << "  w0_s = " << m_w0_stim << std::endl;
 	std::cout << "####### r = " << m_input_rate << std::endl;
 	std::cout << "#######" << std::endl;
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "ifNeuron.h"
+#include "../source/ifNeuron.h"
 
 double dt = 0.1;
 
@@ -27,7 +27,7 @@ int main()
 			ifn.inject_ex_current(0.);
 		}
 		else
-		
+
 		spiked = ifn.update(dt);
 
 		std::cout << i*dt << ' ' << ifn.get_V() << std::endl;
