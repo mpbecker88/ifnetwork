@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
 			//weightMatrix_file.open("weight_matrix" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
 			currents_file.open("currents" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
 
-			IFNetwork netspike(N, symmetric, pruning, local_pruning, w0_ee, g_ei, g_ie, input_rate, start_measure_time, "sim", atoi(argv[1]));
+			IFNetwork netspike(symmetric, pruning, local_pruning, g_ei, g_ie, "sim", atoi(argv[1]));
 			//netspike.print_weightMatrix(weightMatrix_file);
 
 			for(int i = 0; i <	500000; i++)

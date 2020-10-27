@@ -11,17 +11,21 @@ public:
 	~InputParameters();
 	int get_N(){return m_N;};
 	double get_w0_EE(){return m_w0_EE;}
+	double get_w0_stim(){return m_w0_stim;}
 	double get_input_rate(){return m_input_rate;};
 	double get_input_amplitude(){return m_input_amplitude;}
 	double get_input_frequency(){return m_input_freq;}
 	double get_start_measure_time(){return m_start_measure_time;};
-	double get_alpha_E();
-	double get_alpha_I();
+	double get_alpha_E(){return m_alpha_E;};
+	double get_alpha_I(){return m_alpha_I;};
+	bool is_alpha_E_random(){return m_is_alpha_E_random;};
+	bool is_alpha_I_random(){return m_is_alpha_I_random;};
 
 
 private:
 	int m_N;  // Network size.
-	double m_w0_EE;  // Initial weight for EE connection
+	double m_w0_EE;  // Initial weight for EE connection.
+	double m_w0_stim;  // Initial weight from the external input.
 	double m_input_rate;  // Rate o firing of the input layer.
 	double m_input_amplitude;  // Amplitude of input oscilation (0 for constant input).
 	double m_input_freq;  // Frequency of input oscilation;

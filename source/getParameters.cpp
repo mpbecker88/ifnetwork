@@ -3,17 +3,9 @@
 #include <fstream>
 #include <string>
 #include <time.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
-gsl_rng *r;
 
 InputParameters::InputParameters(std::string p_file_name)
 {
-	gsl_rng_env_setup();
-	r = gsl_rng_alloc (gsl_rng_mt19937);
-	gsl_rng_set(r, time(NULL));
-
 	std::ifstream p_file;
 
 	p_file.open(p_file_name);
@@ -25,7 +17,6 @@ InputParameters::InputParameters(std::string p_file_name)
 
 InputParameters::~InputParameters()
 {
-	gsl_rng_free(r);
 }
 
 void InputParameters::get_parameters_from_file(std::ifstream &p_file)
@@ -39,6 +30,10 @@ void InputParameters::get_parameters_from_file(std::ifstream &p_file)
 	// Get EE weight.
 	p_file >> var_name;
 	p_file >> m_w0_EE;
+
+	// Get stim weight.
+	p_file >> var_name;
+	p_file >> m_w0_stim;
 
 	// Get input rate.
 	p_file >> var_name;
@@ -71,28 +66,4 @@ void InputParameters::get_parameters_from_file(std::ifstream &p_file)
 	// Get is alpha_I random.
 	p_file >> var_name;
 	p_file >> m_is_alpha_I_random;
-}
-
-double InputParameters::get_alpha_E()
-{
-	if(m_is_alpha_E_random)
-	{
-		return gsl_ran_flat(r, 0.2, 1.0);
-	}
-	else
-	{
-		return m_alpha_E;
-	}
-}
-
-double InputParameters::get_alpha_I()
-{
-	if(m_is_alpha_I_random)
-	{
-		return gsl_ran_flat(r, 0.2, 1.0);
-	}
-	else
-	{
-		return m_alpha_I;
-	}
 }

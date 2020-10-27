@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
 	const double input_rate = 0.005;
 	const double start_measure_time = 500.;
 
-	IFNetwork netspike(N, symmetric, pruning, local_pruning, w0_ee, g_ei, g_ie, input_rate, start_measure_time, "test", atoi(argv[1]));
+	IFNetwork netspike(symmetric, pruning, local_pruning, g_ei, g_ie, "test", atoi(argv[1]));
 	netspike.print_connections(connections_file);
 	netspike.print_weightMatrix(weightMatrixBegin_file);
 

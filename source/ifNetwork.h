@@ -10,7 +10,7 @@
 class IFNetwork
 {
 public:
-	IFNetwork(int N, bool symmetric, bool pruning, bool local_pruning, double w0_ee, double g_ei, double g_ie, double input_rate, double start_measure_time, std::string sim_number, int seed);
+	IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_ei, double g_ie, std::string sim_number, int seed);
 	~IFNetwork();
 	void update();
 	void change_input_rate(double r);
@@ -60,6 +60,12 @@ private:
 	double m_sum_mean_v2; // Sum of the squared average membrane potential.
 	double m_start_measure_time; // Starting time for syncronization mesures.
 	double m_input_rate; //Rate o firing of the input layer.
+	double m_input_amplitude; // Amplitude of input rate oscilation (0 for constant).
+	double m_input_frequency; // Frequency of input rate oscilation.
+	double m_alpha_E;  // AMPA/NMDA channel ratio for excitatory targets.
+	double m_alpha_I;  // AMPA/NMDA channel ratio for inhibitory targets.
+	bool m_is_alpha_E_random; // Is the AMPA/NMDA channel ratio for excitatory targets random?
+	bool m_is_alpha_I_random; // Is the AMPA/NMDA channel ratio for inhibitory targets random?
 	double m_eta; //Learning rate for inhibitory plasticity.
 	double m_alpha; //Depression factor for inhibitory plasticity.
 	double m_B; //STDP doublet and triplet learning rate.

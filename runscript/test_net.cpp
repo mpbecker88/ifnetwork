@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
 	std::ofstream raster_file;
 	raster_file.open("raster_uncoupled_0.75.dat");
 
-	IFNetwork netspike(N, symmetric, pruning, local_pruning, w0_ee, g_ei, g_ie, input_rate, start_measure_time, "test", atoi(argv[1]));
+	IFNetwork netspike(symmetric, pruning, local_pruning, g_ei, g_ie, "test", atoi(argv[1]));
 
 	for(int i = 0; i <	100000; i++)
 	{

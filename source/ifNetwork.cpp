@@ -1,5 +1,6 @@
 #include "ifNetwork.h"
 #include "ifNeuron.h"
+#include "getParameters.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -12,7 +13,7 @@
 const double epsilon = 0.00001;
 gsl_rng *r;
 
-IFNetwork::IFNetwork(int N, bool symmetric, bool pruning, bool local_pruning, double w0_ee, double g_ei, double g_ie, double input_rate, double start_measure_time, std::string sim_number, int seed)
+IFNetwork::IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_ei, double g_ie, std::string sim_number, int seed)
 {
 
 	// select random number generator
@@ -20,14 +21,16 @@ IFNetwork::IFNetwork(int N, bool symmetric, bool pruning, bool local_pruning, do
 	r = gsl_rng_alloc (gsl_rng_mt19937);
 	gsl_rng_set(r, seed);
 
+	InputParameters input_par("parameters.dat");
+
 	m_t = 0;
 	m_dt = 0.1;
 
 	m_pruning = pruning;
 	m_local_pruning = local_pruning;
 
-	m_N = N;
-	m_Ni = N/5;
+	m_N = input_par.get_N();
+	m_Ni = m_N/5;
 	m_Ne = m_N - m_Ni;
 	m_Ninp = m_Ne;
 	m_Npruned = 0;
@@ -46,13 +49,20 @@ IFNetwork::IFNetwork(int N, bool symmetric, bool pruning, bool local_pruning, do
 	m_conn_prob_ie = 0.1;
 	m_conn_prob_ii = 0.1;
 	m_conn_prob_stim = 0.05;
-	m_w0_ee = w0_ee;
-	m_w0_ei = w0_ee*g_ei;
-	m_w0_ie = w0_ee*g_ie;
-	m_w0_ii = w0_ee*2;
-	m_w0_stim = 0.05;
+	m_w0_ee = input_par.get_w0_EE();
+	m_w0_ei = m_w0_ee*g_ei;
+	m_w0_ie = m_w0_ee*g_ie;
+	m_w0_ii = m_w0_ee*2;
+	m_w0_stim = input_par.get_w0_stim();
 
-	m_input_rate = input_rate;
+	m_input_rate = input_par.get_input_rate();
+	m_input_amplitude = input_par.get_input_amplitude();
+	m_input_frequency = input_par.get_input_frequency();
+
+	m_alpha_E = input_par.get_alpha_E();
+	m_alpha_I = input_par.get_alpha_I();
+	m_is_alpha_E_random = input_par.is_alpha_E_random();
+	m_is_alpha_I_random = input_par.is_alpha_I_random();
 
 	m_eta = 0.001;
 	m_gamma = 0.004;
@@ -68,13 +78,13 @@ IFNetwork::IFNetwork(int N, bool symmetric, bool pruning, bool local_pruning, do
 
 	m_expHL = exp(-m_dt/m_tau_HL);
 
-	m_start_measure_time = start_measure_time;
+	m_start_measure_time = input_par.get_start_measure_time();
 
 	m_sum_mean_v = 0;
 	m_sum_mean_v2 = 0;
 
-	m_Neuron.reserve(N);
-	m_spiked.reserve(N);
+	m_Neuron.reserve(m_N);
+	m_spiked.reserve(m_N);
 
 	print_parameters();
 
@@ -105,8 +115,15 @@ void IFNetwork::init_ex_neurons(bool symmetric)
 	{
 		for(int i = 0; i < m_Ne; i++)
 		{
-			double alpha = gsl_ran_flat(r, 0.2, 1.0);
-			IFNeuron t_neuron = IFNeuron(true, 0, alpha, m_dt);
+			double alpha_E;
+			if(m_is_alpha_E_random)
+				alpha_E = gsl_ran_flat(r, 0.2, 1.0);
+			else
+				alpha_E = m_alpha_E;
+
+			std::cout << alpha_E << std::endl;
+			
+			IFNeuron t_neuron = IFNeuron(true, 0, alpha_E, m_dt);
 			Node t_node;
 
 			t_node.n = t_neuron;
@@ -132,8 +149,13 @@ void IFNetwork::init_ex_neurons(bool symmetric)
 	{
 		for(int i = 0; i < m_Ne; i++)
 		{
-			double alpha = gsl_ran_flat(r, 0.2, 1.0);
-			IFNeuron t_neuron = IFNeuron(true, 0, alpha, m_dt);
+			double alpha_E;
+			if(m_is_alpha_E_random)
+				alpha_E = gsl_ran_flat(r, 0.2, 1.0);
+			else
+				alpha_E = m_alpha_E;
+			
+			IFNeuron t_neuron = IFNeuron(true, 0, alpha_E, m_dt);
 			Node t_node;
 
 			t_node.n = t_neuron;
@@ -165,8 +187,15 @@ void IFNetwork::init_in_neurons(bool symmetric)
 	{
 		for(int i = m_Ne; i < m_N; i++)
 		{
-			double alpha = 0.5;
-			IFNeuron t_neuron = IFNeuron(false, 0, alpha, m_dt);
+			double alpha_I;
+			if(m_is_alpha_I_random)
+				alpha_I = gsl_ran_flat(r, 0.2, 1.0);
+			else
+				alpha_I = m_alpha_I;
+			
+			std::cout << alpha_I << std::endl;
+
+			IFNeuron t_neuron = IFNeuron(false, 0, alpha_I, m_dt);
 			Node t_node;
 
 			t_node.n = t_neuron;
@@ -193,8 +222,13 @@ void IFNetwork::init_in_neurons(bool symmetric)
 	{
 		for(int i = m_Ne; i < m_N; i++)
 		{
-			double alpha = 0.5;
-			IFNeuron t_neuron = IFNeuron(false, 0, alpha, m_dt);
+			double alpha_I;
+			if(m_is_alpha_I_random)
+				alpha_I = gsl_ran_flat(r, 0.2, 1.0);
+			else
+				alpha_I = m_alpha_I;
+			
+			IFNeuron t_neuron = IFNeuron(false, 0, alpha_I, m_dt);
 			Node t_node;
 
 			t_node.n = t_neuron;
