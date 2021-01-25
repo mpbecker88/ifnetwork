@@ -10,7 +10,7 @@
 class IFNetwork
 {
 public:
-	IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_ei, double g_ie, std::string sim_number, int seed);
+	IFNetwork(bool k_homogeneous, bool pruning, bool local_pruning, double g_ei, double g_ie, std::string sim_number, int seed);
 	~IFNetwork();
 	void update();
 	void change_input_rate(double r);
@@ -55,7 +55,6 @@ private:
 	double m_w0_ie; // Initial weight for IE connection.
 	double m_w0_ii; // Initial weight for II connection.
 	double m_w0_stim; // Initial weight for the input layer connection.
-	double m_g; // Weight gain factor;
 	double m_sum_mean_v; // Sum of the average membrane potential.
 	double m_sum_mean_v2; // Sum of the squared average membrane potential.
 	double m_start_measure_time; // Starting time for syncronization mesures.
@@ -175,8 +174,8 @@ private:
 	std::list<Event> m_events; // List containing spike events.
 
 
-	void init_ex_neurons(bool symmetric);
-	void init_in_neurons(bool symmetric);
+	void init_ex_neurons(bool k_homogeneous);
+	void init_in_neurons(bool k_homogeneous);
 	void init_spiked_vector();
 	void init_input_layer();
 	void adjust_connections();

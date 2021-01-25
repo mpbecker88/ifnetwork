@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
 
 	const int N = 5000;
 	const int n = 100;
-	const bool symmetric = true;
+	const bool k_homogeneous = false;
 	const double w_base = 0.4;
 	const double input_rate = 0.05;
 	const double start_measure_time = 500.;
@@ -56,7 +56,7 @@ int main(int argc, char const *argv[])
 		{
 			std::cout << g << " " << i << std::endl;
 
-			IFNetwork netspike(N, symmetric, mean_delay, sigma_delay, w_base, g, input_rate, start_measure_time, std::to_string(i), rand() % 100000);
+			IFNetwork netspike(N, k_homogeneous, mean_delay, sigma_delay, w_base, g, input_rate, start_measure_time, std::to_string(i), rand() % 100000);
 
 			for(double t = 0; t < 1000; t += 0.1)
 			{

@@ -87,11 +87,10 @@ IFNeuron::IFNeuron(bool ex, double IexInit, double alpha, double dt)
 	m_P.taud = 200.;
 	m_P.tauf = 600.;
 	m_P.tauSTDP = 20.;
-	m_P.tauSTDP = 20.;
 	m_P.tauPlus = 20.;
 	m_P.tauMinus = 20.;
 	m_P.tauSlow = 100.;
-	m_P.tauThr = 2;
+	m_P.tauThr = 2.;
 
 	m_P.Vrest = -60.;
 	m_P.VEx = 0.;
@@ -139,6 +138,7 @@ bool IFNeuron::update(double dt)
 {
 	bool spiked = false;
 
+	// update membrane potential.
 	if(m_S.silenced)	//Neuron is silenced, don't update.
 	{
 		return spiked;
@@ -164,6 +164,7 @@ bool IFNeuron::update(double dt)
 		//m_S.V = m_P.Vreset;
 	}
 
+	// update conductances and threshold.
 	NMDA_cond(dt);
 	AMPA_cond();
 	GABA_cond();

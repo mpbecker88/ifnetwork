@@ -25,6 +25,9 @@ public:
 	double get_trace_slow_prev(){return m_S.trace_slow_prev;};
 	double get_in_current(){return m_C.g_GABA*(m_P.VIn - m_S.V);};
 	double get_ex_current(){return (m_P.alpha*m_C.g_AMPA + (1 - m_P.alpha)*m_C.g_NMDA)*(m_P.VEx - m_S.V);};
+	double get_gaba_conductance(){return m_C.g_GABA;};
+	double get_ampa_conductance(){return m_C.g_AMPA;};
+	double get_nmda_conductance(){return m_C.g_NMDA;};
 	double get_STP_u(){return m_S.STP_u;};
 	double get_STP_x(){return m_S.STP_x;};
 	double get_threshold(){return m_S.th;};
@@ -160,13 +163,13 @@ private:
 
 	struct Condutances
 	{
-		/** AMPA excitatory condutânce in nS. */
+		/** AMPA excitatory condutânce. */
 		double g_AMPA;
 
-		/** NMDA excitatory condutânce in nS. */
+		/** NMDA excitatory condutânce. */
 		double g_NMDA;
 
-		/** GABA inhibitory condutânce in nS. */
+		/** GABA inhibitory condutânce. */
 		double g_GABA;
 	};
 

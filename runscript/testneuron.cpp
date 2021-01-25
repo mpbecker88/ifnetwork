@@ -7,7 +7,7 @@ double dt = 0.1;
 
 int main()
 {
-	double alpha = 1;
+	double alpha = 0.5;
 	IFNeuron ifn(true, 0, alpha, dt);
 	bool spiked;
 
@@ -16,7 +16,7 @@ int main()
 
 		if(i==30)
 		{
-			ifn.inject_in_current(0.1);
+			ifn.inject_ex_current(10.1);
 		}
 		else if(i==30)
 		{
@@ -26,10 +26,9 @@ int main()
 		{
 			ifn.inject_ex_current(0.);
 		}
-		else
 
 		spiked = ifn.update(dt);
 
-		std::cout << i*dt << ' ' << ifn.get_V() << std::endl;
+		std::cout << i*dt << ' ' << ifn.get_V() << " " << ifn.get_ampa_conductance() << " " << ifn.get_nmda_conductance() << " " << ifn.get_gaba_conductance() << " " << ifn.get_threshold() << std::endl;
 	}
 }

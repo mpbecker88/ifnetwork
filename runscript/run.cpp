@@ -33,14 +33,14 @@ int main(int argc, char const *argv[])
 	const bool pruning = false;
 	const bool local_pruning = false;
 	const int N = 5120;
-	const bool symmetric = true;
+	const bool k_homogeneous = true;
 	const double g_ei = 1;
 	const double g_ie = 1;
 	const double w0_ee = 0.1;
 	const double input_rate = 0.005;
 	const double start_measure_time = 500.;
 
-	IFNetwork netspike(symmetric, pruning, local_pruning, g_ei, g_ie, "test", atoi(argv[1]));
+	IFNetwork netspike(k_homogeneous, pruning, local_pruning, g_ei, g_ie, "test", atoi(argv[1]));
 	netspike.print_connections(connections_file);
 	netspike.print_weightMatrix(weightMatrixBegin_file);
 

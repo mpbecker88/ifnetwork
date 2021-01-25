@@ -17,26 +17,31 @@ int main(int argc, char const *argv[])
 	const bool pruning = false;
 	const bool local_pruning = false;
 	const int N = 5120;
-	const bool symmetric = true;
+	const bool k_homogeneous = true;
 	const double g_ei = 0;
 	const double g_ie = 0;
 	const double w0_ee = 0.75;
 	const double input_rate = 0.005;
 	const double start_measure_time = 550000.;
 
-	std::ofstream raster_file;
-	raster_file.open("raster_uncoupled_0.75.dat");
+	//std::ofstream raster_file;
+	//raster_file.open("raster_uncoupled_0.75.dat");
 
-	IFNetwork netspike(symmetric, pruning, local_pruning, g_ei, g_ie, "test", atoi(argv[1]));
+	//std::ofstream connections_file;
+	//connections_file.open("connections.dat");
+	
+	IFNetwork netspike(k_homogeneous, pruning, local_pruning, g_ei, g_ie, "test", atoi(argv[1]));
 
-	for(int i = 0; i <	100000; i++)
+	//netspike.print_connections(connections_file);
+
+	for(int i = 0; i <	100; i++)
 	{
 		std::cout << i*0.1 << std::endl;
 		//if(i == 90000)
 		//	netspike.change_input_rate(0);
 
 		netspike.update();
-		netspike.print_spikes(raster_file);
+		//netspike.print_spikes(raster_file);
 	}
 
 	//std::cout << "# " << netspike.calculate_syncronization() << " " << netspike.calculate_mean_fire_rate() << " " << netspike.calculate_fano_factor() << std::endl;

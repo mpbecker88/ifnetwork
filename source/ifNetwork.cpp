@@ -13,7 +13,7 @@
 const double epsilon = 0.00001;
 gsl_rng *r;
 
-IFNetwork::IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_ei, double g_ie, std::string sim_number, int seed)
+IFNetwork::IFNetwork(bool k_homogeneous, bool pruning, bool local_pruning, double g_ei, double g_ie, std::string sim_number, int seed)
 {
 
 	// select random number generator
@@ -21,6 +21,7 @@ IFNetwork::IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_
 	r = gsl_rng_alloc (gsl_rng_mt19937);
 	gsl_rng_set(r, seed);
 
+	// get parameters from file
 	InputParameters input_par("parameters.dat");
 
 	m_t = 0;
@@ -52,7 +53,7 @@ IFNetwork::IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_
 	m_w0_ee = input_par.get_w0_EE();
 	m_w0_ei = m_w0_ee*g_ei;
 	m_w0_ie = m_w0_ee*g_ie;
-	m_w0_ii = m_w0_ee*2;
+	m_w0_ii = m_w0_ee*4;
 	m_w0_stim = input_par.get_w0_stim();
 
 	m_input_rate = input_par.get_input_rate();
@@ -72,8 +73,8 @@ IFNetwork::IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_
 	m_delta = 0.00002;
 	m_sigma_ee_conn = 100;
 	m_sigma_ei_conn = 100;
-	m_sigma_ie_conn = 10;
-	m_sigma_ii_conn = 10;
+	m_sigma_ie_conn = 100;
+	m_sigma_ii_conn = 100;
 	m_H = m_gamma;
 
 	m_expHL = exp(-m_dt/m_tau_HL);
@@ -89,8 +90,8 @@ IFNetwork::IFNetwork(bool symmetric, bool pruning, bool local_pruning, double g_
 	print_parameters();
 
 	std::cout << "####### initializing neurons" << std::endl;
-	init_ex_neurons(symmetric);
-	init_in_neurons(symmetric);
+	init_ex_neurons(k_homogeneous);
+	init_in_neurons(k_homogeneous);
 	adjust_connections();
 	init_input_layer();
 	init_spiked_vector();
@@ -108,21 +109,23 @@ IFNetwork::~IFNetwork()
 	gsl_rng_free(r);
 }
 
-
-void IFNetwork::init_ex_neurons(bool symmetric)
+// initiate excitatory neurons
+void IFNetwork::init_ex_neurons(bool k_homogeneous)
 {
-	if(symmetric)
+	if(k_homogeneous)
 	{
 		for(int i = 0; i < m_Ne; i++)
 		{
 			double alpha_E;
 			if(m_is_alpha_E_random)
+			{
 				alpha_E = gsl_ran_flat(r, 0.2, 1.0);
+			}
 			else
+			{	
 				alpha_E = m_alpha_E;
+			}
 
-			std::cout << alpha_E << std::endl;
-			
 			IFNeuron t_neuron = IFNeuron(true, 0, alpha_E, m_dt);
 			Node t_node;
 
@@ -180,10 +183,10 @@ void IFNetwork::init_ex_neurons(bool symmetric)
 }
 
 
-
-void IFNetwork::init_in_neurons(bool symmetric)
+// initiate inhibitory neurons
+void IFNetwork::init_in_neurons(bool k_homogeneous)
 {
-	if(symmetric)
+	if(k_homogeneous)
 	{
 		for(int i = m_Ne; i < m_N; i++)
 		{
@@ -193,8 +196,6 @@ void IFNetwork::init_in_neurons(bool symmetric)
 			else
 				alpha_I = m_alpha_I;
 			
-			std::cout << alpha_I << std::endl;
-
 			IFNeuron t_neuron = IFNeuron(false, 0, alpha_I, m_dt);
 			Node t_node;
 
@@ -1024,9 +1025,9 @@ void IFNetwork::check_spikes()
 				if(excitatory)
 					w *= STP_u*STP_x; //STP scalled weight.
 
-				double t = m_t + m_Neuron[i].n_pos[j].delay;
+				double t_sp = m_t + m_Neuron[i].n_pos[j].delay;
 
-				insert_event(excitatory, t, n_pos, w);
+				insert_event(excitatory, t_sp, n_pos, w);
 			}
 		}
 	}
@@ -1050,7 +1051,7 @@ void IFNetwork::insert_event(bool excitatory, double t, int n_pos, double w)
 	{
 		std::list<Event>::iterator it = m_events.end()--;
 
-		while((*it).t >= t && it != m_events.begin())
+		while(((*it).t >= t) && (it != m_events.begin()))
 		{
 			it--;
 		}
@@ -1092,7 +1093,7 @@ void IFNetwork::distribute_spikes()
 		if(excitatory)
 		{
 			m_Neuron[n_pos].n.inject_ex_current(w);
-
+			
 			m_events.erase(it++);
 		}
 		else

@@ -1,12 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-neurons = np.loadtxt("lastInhbConn.dat")
+neurons = np.loadtxt("connections.dat")
 
-nc = 4803 - 4096
-
-xc = 0.5 + 2*(nc%32)
-yc = 0.5 + 2*(nc//32)
+nc = 500
+xc = nc%64
+yc = nc//64
 
 #xc = nc%64
 #yc = nc//64
@@ -17,7 +16,7 @@ ye = []
 xi = []
 yi = []
 
-for n in neurons:
+for n in neurons[nc,:]:
 	if n < 4096:
 		xe.append(n%64)
 		ye.append(n//64)

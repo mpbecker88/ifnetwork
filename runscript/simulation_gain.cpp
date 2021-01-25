@@ -22,16 +22,13 @@ int main(int argc, char const *argv[])
 	srand(time(NULL));
 	const bool pruning = false;
 	const bool local_pruning = false;
-	const int N = 5120;
-	const bool symmetric = true;
-	const double input_rate = 0.03;
-	const double start_measure_time = 10000.;
+	const bool k_homogeneous = false;
 
 	double w0_ee = 0.1;
-	double g_ei = 1;
+	double g_ei = 1.0;
 	while(g_ei < 4.1)
 	{
-		double g_ie = 1;
+		double g_ie = 1.0;
 		while(g_ie < 4.1)
 		{
 			std::cout << g_ei << " " << g_ie << std::endl;
@@ -47,7 +44,7 @@ int main(int argc, char const *argv[])
 			//weightMatrix_file.open("weight_matrix" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
 			currents_file.open("currents" + std::to_string(g_ei) + "_" + std::to_string(g_ie) + ".dat");
 
-			IFNetwork netspike(symmetric, pruning, local_pruning, g_ei, g_ie, "sim", atoi(argv[1]));
+			IFNetwork netspike(k_homogeneous, pruning, local_pruning, g_ei, g_ie, "sim", atoi(argv[1]));
 			//netspike.print_weightMatrix(weightMatrix_file);
 
 			for(int i = 0; i <	500000; i++)
